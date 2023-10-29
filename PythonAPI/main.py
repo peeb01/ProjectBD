@@ -150,6 +150,36 @@ async def main():
         return {"error": str(e)}
 
 
+#------------------------------------------------- SELECT MASSUER TYPE ---------------------------------------#
+class MassuerType(BaseModel):
+    massuertype : str
+
+def selectType(massuerType):
+    try:
+        query = """
+                select M.fname, M.lname
+                from Masuer M
+                where M.massuertype = ?
+                """
+        cursor.execute(query, (massuerType.massuertype,))  # You should pass a tuple as a parameter
+        results = cursor.fetchall()
+        print(results)
+        dict_list = [{'First Name': item[0], 'Last Name': item[1]} for item in results]
+        results_json = json.dumps(dict_list, ensure_ascii=False, indent=2)
+        return results_json
+    except Exception as e:
+        return str(e)
+
+# Your route handler
+@app.post("/main/massuertype")
+async def massuertype(mtype: MassuerType):
+    try:
+        results = selectType(mtype)
+        return results
+    except:
+        raise HTTPException(status_code=500, detail="Nothing.")
+    
+
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
 
