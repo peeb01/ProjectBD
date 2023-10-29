@@ -1,0 +1,89 @@
+
+
+
+Customer:
+
+CustomerID (Primary Key): รหัสลูกค้า
+FirstName: ชื่อ
+LastName: นามสกุล
+Address: ที่อยู่
+Phone: เบอร์โทรศัพท์
+Email: อีเมล
+DateOfBirth: วันเกิด (ใช้คำนวณอายุ)
+
+
+Masseur:
+
+MasseurID (Primary Key): รหัสหมอนวด
+FirstName: ชื่อ
+LastName: นามสกุล
+Address: ที่อยู่
+Phone: เบอร์โทรศัพท์
+Email: อีเมล
+DateOfBirth: วันเกิด (ใช้คำนวณอายุ)
+Masseur Photo
+
+MasseurDatOff:      วันหยุด
+MasseurID (Foreign Key)
+Day
+
+
+MassageType:
+TypeOfMassageID (Primary Key)
+Massage Type Name
+Masseur ID (Foreign Key)
+
+
+
+Booking:
+
+BookingID (Primary Key): รหัสการจอง
+CustomerID (Foreign Key): รหัสลูกค้าที่จอง
+TypeOfMassageID (Foreign Key): ประเภทการนวดที่ลูกค้าต้องการ
+DateTime: วันและเวลาที่ลูกค้าจอง
+
+
+Payment:
+
+PaymentID (Primary Key): รหัสการชำระเงิน
+BookingID (Foreign Key): รหัสการจองที่เกี่ยวข้อง
+Amount: จำนวนเงิน
+PaymentStatus: สถานะการชำระเงิน
+
+
+Salary :
+Salary Code (Primary Key)
+number of money
+
+MasseurSalary:
+MasseurID (Foreign Key)
+Salary Code (Foreign Key)
+
+
+
+TreatmentHistory:
+
+TreatmentHistoryID (Primary Key): รหัสประวัติการรักษาหรือการนวด
+BookingID (Foreign Key) : รหัสการจอง
+MasseurID (Foreign Key): รหัสหมอนวดที่ให้บริการ
+CustomerID (Foreign Key): รหัสลูกค้าที่รับการรักษาหรือการนวด
+DateTime: วันและเวลาที่นวดเสร็จสิ้น
+ResultAndRecommendation: ผลการนวดและคำแนะนำ
+
+
+Membership:
+
+MembershipID (Primary Key): รหัสสมาชิก
+CustomerID (Foreign Key): รหัสลูกค้าที่เป็นสมาชิก
+Points: คะแนนสะสม
+
+
+
+FinancialRecords:
+TransactionID (Primary Key)
+TransactionType : รายรับ รายจ่าย
+PaymentID(Foreign Key)
+
+TransactionDate : วันเวลา
+Amount : จำนวนเงิน
+เงินเหลือ
