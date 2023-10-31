@@ -306,6 +306,94 @@ def selectMasuerScheduling(massuer: MassuerScheduiling):
     results_json = json.dumps(sorted_dict_list, ensure_ascii=False, indent=4)
     return results_json
 
+
+#------------------------------------------------- Massuer Income ---------------------------------------------#
+
+def getMassuerIncome():
+    try:
+        qeury = """
+                select B.masuerID, B.massuerName, sum(B.prices) as TotalPrices
+                from Booking B
+                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
+                group by B.masuerID, B.massuerName
+                """
+        cursor.execute(qeury)
+        results = cursor.fetchall()
+        
+        dict_list = [{'Masuer ID': item[0],'Masuer Name': item[1], 'Total income': item[2]} for item in results]
+        results_json = json.dumps(dict_list, ensure_ascii=False, indent=3)
+        return results_json   
+
+    except Exception as e:
+        return str(e)
+
+@app.get('/massuerIncome')
+async def massuerIncome():
+    try:
+        result_json = getMassuerIncome()
+        return result_json
+    except Exception as e:
+        return {"error": str(e)}
+    
+#------------------------------------------------- Massuer Salary ---------------------------------------------#
+
+def getMassuerSalary():
+    try:
+        qeury = """
+                select B.masuerID, B.massuerName, (sum(B.prices))*0.75 as TotalPrices
+                from Booking B
+                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
+                group by B.masuerID, B.massuerName
+                """
+        cursor.execute(qeury)
+        results = cursor.fetchall()
+        
+        dict_list = [{'Masuer ID': item[0],'Masuer Name': item[1], 'Total income': item[2]} for item in results]
+        results_json = json.dumps(dict_list, ensure_ascii=False, indent=3)
+        return results_json   
+    except Exception as e:
+        return str(e)
+
+@app.get('/massuerSalary')
+async def massuerSalary():
+    try:
+        result_json = getMassuerSalary()
+        return result_json
+    except Exception as e:
+        return {"error": str(e)} 
+
+
+#------------------------------------------------- Customer Review ---------------------------------------------#
+
+class Reviews(BaseModel):
+    username : str
+    customerId : int
+    reviewsText : str
+
+@app.post('/reviews')
+def cusReview(review: Reviews):
+    username = review.username
+    massuerId = review.customerId
+    text = review.reviewsText
+    ids = cursor.execute("select * from CustomerReview").fetchall()
+    reviewId = len(ids) + 1
+    current_time = datetime.now()
+    try:
+        query = """
+                insert into CustomerReview(reviewId, username, masuerId, reviewText, dateTim)
+                values (?, ?, ?, ?, ?)
+                """
+
+        cursor.execute(query, (reviewId, username, massuerId, text, current_time))
+        conn.commit()
+
+        return {"message": "Review inserted successfully"}
+    except Exception as e:
+        return {"message": f"Error: {str(e)}"}
+
+
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
 
