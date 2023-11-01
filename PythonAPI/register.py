@@ -17,6 +17,7 @@ conn = pyodbc.connect(connection_string)
 cursor = conn.cursor()
 
 
+
 app = FastAPI()
 
 class CustomerRegistration(BaseModel):

@@ -314,7 +314,7 @@ def getMassuerIncome():
         qeury = """
                 select B.masuerID, B.massuerName, sum(B.prices) as TotalPrices
                 from Booking B
-                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
+                where B.Timemasuer >= dateadd(month, datediff(month, 0, getdate()), 0)
                 group by B.masuerID, B.massuerName
                 """
         cursor.execute(qeury)
@@ -343,7 +343,7 @@ def getMassuerSalary():
                 select B.masuerID, B.massuerName, (sum(B.prices))*0.75 as TotalPrices
                 from Booking B
                 where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
-                group by B.masuerID, B.massuerName
+                group by B.Timemasuer, B.massuerName
                 """
         cursor.execute(qeury)
         results = cursor.fetchall()
@@ -395,5 +395,4 @@ def cusReview(review: Reviews):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8000)
-
+    uvicorn.run("main:app", host="192.168.3.2", port=80)  # host is IPv4 of computer

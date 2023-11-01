@@ -25,6 +25,7 @@ def verify_credentials(username: str, password: str) -> bool:
     """
     try:
 
+
         query = "SELECT COUNT(*) FROM Customer WHERE username = ? AND pasword = ?"
         cursor.execute(query, (username, password))
         result = cursor.fetchone()
