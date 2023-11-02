@@ -18,6 +18,49 @@ cursor = conn.cursor()
 app = FastAPI()
 
 
+#-------------------------------------------------Masuer register -----------------------------------------#
+class MasuerRegistration(BaseModel):
+    Id: int
+    fname: str
+    lname: str
+    dateOfBirth: str
+    gender: str
+    phoneNum: str
+    email: str
+    masuerType: str
+    dayoff: str
+
+def register_masuer(masuer_data : tuple):
+    data = cursor.execute("select * from Masuer").fetchall()
+    Id = len(data) + 1
+    try:
+        query = """
+        insert into Masuer (masuerId, fname, lname, dateOfBirth, gender, phoneNum, email, massuertype, dayoff, statusNow)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        cursor.execute(query, (Id,masuer_data))
+        conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Database error")
+
+@app.post('/register-masuer')
+def register_masuer(new_masuer : MasuerRegistration):
+    try:
+        customer_data = (
+            new_masuer.Id,
+            new_masuer.fname,
+            new_masuer.lname,
+            datetime.strptime(new_masuer.dateOfBirth, "%Y-%m-%d").date(),
+            new_masuer.gender,
+            new_masuer.phoneNum,
+            new_masuer.email,
+            new_masuer.masuerType,
+            new_masuer.dayoff
+        )
+        register_masuer(customer_data)
+        return {"message": "Customer registered successfully"}
+    except:
+        raise HTTPException(status_code=500, detail="The username already used.")
 
 #--------------------------------------------------REGISTER-------------------------------------------------#
 class CustomerRegistration(BaseModel):
@@ -81,6 +124,100 @@ def register(new_customer : CustomerRegistration):
     except:
         raise HTTPException(status_code=500, detail="The username already used.")
 
+#--------------------------------------------------Masuer Login---------------------------------------------------#
+
+class MasuerCredentials(BaseModel):
+    Id: int
+    masuerName : str
+
+def verify_masuer(Id: str, masuerName: str) -> bool:
+    """
+    function use for check username and password in database 
+
+    Args :
+        Id : str,
+        masuerName : str
+
+    Returns : Boolean if true login sucsesfull
+    """
+    try:
+
+        query = "select count(*) from Masuer where masuerId = ? and fname = ?"
+        cursor.execute(query, (Id, masuerName))
+        result = cursor.fetchone()
+        return result[0] > 0
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+
+@app.post("/login-masuer")
+async def loginMasuer(credentials: MasuerCredentials):
+    if verify_masuer(credentials.Id, credentials.masuerName):
+        return {"message": "Login successful"}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+
+#---------------------------------------------------- MAIN PAGE --------------------------------------------------#
+import json
+
+def selectMasuer():
+    try:
+        query = """
+                select M.fname, M.lname, M.gender, M.massuertype
+                from Masuer M
+                where ( M.dayoff <> (select datename(weekday, getdate()) as CurrentDayOfWeek)) and (M.statusNow = 1) 
+                """      
+        cursor.execute(query)
+        results = cursor.fetchall()
+        # print(results)
+        # df = pd.DataFrame(results, columns=['fname', 'lname', 'gender', 'massuertype'])
+        # result_json = df.to_json(orient='index')
+
+        dict_list = [{'First Name': item[0], 'Last Name': item[1], 'Gender': item[2], 'Massage Type': item[3]} for item in results]
+        result_json = json.dumps(dict_list, ensure_ascii=False, indent=4)
+        return result_json
+    except Exception as e:
+        return str(e)
+
+@app.get("/main")
+async def main():
+    try:
+        result_json = selectMasuer() 
+        return result_json
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+#------------------------------------------------- SELECT MASSUER TYPE ---------------------------------------#
+class MassuerType(BaseModel):
+    massuertype : str
+
+def selectType(massuerType):
+    try:
+        query = """
+                select M.fname, M.lname
+                from Masuer M
+                where M.massuertype = ?
+                """
+        cursor.execute(query, (massuerType.massuertype,))
+        results = cursor.fetchall()
+        print(results)
+        dict_list = [{'First Name': item[0], 'Last Name': item[1]} for item in results]
+        results_json = json.dumps(dict_list, ensure_ascii=False, indent=2)
+        return results_json
+    except Exception as e:
+        return str(e)
+
+@app.post("/main/massuertype")
+async def massuertype(mtype: MassuerType):
+    try:
+        results = selectType(mtype)
+        return results
+    except:
+        raise HTTPException(status_code=500, detail="Nothing.")
+    
 
 
 #----------------------------------------------------LOGIN----------------------------------------------#
