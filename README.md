@@ -131,4 +131,44 @@ The masuerType field should be one of the following options:
 - นวดเชียง
 - นวดน้ำมันร้อน
 
+## Endpoint: /main/massuertype/selectnexttime/book-appointment (Method: POST)
+To Booking masuer for masage  
+```JSON
+{
+  "username": "string",
+  "masuerId": "int",
+  "masuerFName": "string",
+  "masuerLName": "string",
+  "timewant": "int",
+  "time_bookingwant": "string"
+}
+```
+timewant format is minutes example:
+- 30
+- 60
+- 120
 
+time_bookingwant format example:
+- 2023-Nov-9 15-00-00
+
+## Endpoint: /main/massuerscheduling (Method: POST)
+the masuer wii see Scheduling table of them.
+```JSON
+{
+  "massuerId": "integer"
+}
+```
+
+## Endpoint: /massuerIncome (Methed: GET)
+To see all in come when masuer masage will got money from customer. but all day 1 of month start count from Machine Time.
+
+
+## Endpoint: /reviews (Method: POST)
+Customer will review Masuer after masage.
+```JSON
+{
+  "username": "string",
+  "customerId": 0,
+  "reviewsText": "string"
+}
+```
