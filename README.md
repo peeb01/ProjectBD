@@ -6,7 +6,7 @@
 ### Documentation run at http://localhost:8000/docs
 
 
-## Endpoint: /register-masuer (Method: POST)
+/register-masuer (Method: POST)
 
 
 ```JSON
@@ -54,7 +54,7 @@ Day off is all day in the week:
 - Saturday
 
 
-## Endpoint: /register (Method: POST)
+/register (Method: POST)
 
 ```JSON
 {
@@ -72,7 +72,7 @@ Day off is all day in the week:
 The data input like register-masuer
 
 
-## Endpoint: /login (Method: POST)
+/login (Method: POST)
 ```JSON
 {
   "username": "string",
@@ -80,7 +80,7 @@ The data input like register-masuer
 }
 ```
 
-## Endpoint: /login-masuer (Method: POST)
+/login-masuer (Method: POST)
 ```JSON
 {
   "Id": "integer",
@@ -88,10 +88,10 @@ The data input like register-masuer
 }
 ```
 
-## Endpoint: /main (Method: GET)
+/main (Method: GET)
 Will return all Masuer already to Massage Now
 
-## Endpoint: /main/massuertype (Method: POST)
+/main/massuertype (Method: POST)
 After /main the Customer will select Type for them, this will return All Masuer Already now and Masuer have type a Customer wants.
 ```JSON
 {
@@ -109,7 +109,7 @@ The masuerType field should be one of the following options:
 - นวดเชียง
 - นวดน้ำมันร้อน
 
-## Endpoint:  /main/massuertype/selectnexttime (Method: POST)
+/main/massuertype/selectnexttime (Method: POST)
 To select next time if Customer want will return masuer already in the time.
 ```JSON
 {
@@ -131,7 +131,7 @@ The masuerType field should be one of the following options:
 - นวดเชียง
 - นวดน้ำมันร้อน
 
-## Endpoint: /main/massuertype/selectnexttime/book-appointment (Method: POST)
+/main/massuertype/selectnexttime/book-appointment (Method: POST)
 To Booking masuer for masage  
 ```JSON
 {
@@ -151,7 +151,7 @@ timewant format is minutes example:
 time_bookingwant format example:
 - 2023-Nov-9 15-00-00
 
-## Endpoint: /main/massuerscheduling (Method: POST)
+/main/massuerscheduling (Method: POST)
 the masuer wii see Scheduling table of them.
 ```JSON
 {
@@ -159,11 +159,11 @@ the masuer wii see Scheduling table of them.
 }
 ```
 
-## Endpoint: /massuerIncome (Methed: GET)
+/massuerIncome (Methed: GET)
 To see all in come when masuer masage will got money from customer. but all day 1 of month start count from Machine Time.
 
 
-## Endpoint: /reviews (Method: POST)
+/reviews (Method: POST)
 Customer will review Masuer after masage.
 ```JSON
 {
