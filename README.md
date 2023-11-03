@@ -52,3 +52,21 @@ Day off is all day in the week:
 - Thursday
 - Friday
 - Saturday
+
+
+## Endpoint: /register (Method: POST)
+
+```JSON
+{
+  "username": "string",
+  "pasword": "string",
+  "fname": "string",
+  "lname": "string",
+  "dateOfBirth": "string",
+  "gender": "string",
+  "phoneNum": "string",
+  "email": "string",
+  "localPlace": "string"
+}
+```
+that's data input like register-masuer
