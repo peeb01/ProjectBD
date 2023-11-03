@@ -1,3 +1,5 @@
+import subprocess
+
 from fastapi import FastAPI, HTTPException
 import pyodbc
 import uvicorn
@@ -16,7 +18,6 @@ connection_string = f"DRIVER={{{DRIVER_NAME}}};SERVER={SERVER_NAME};DATABASE={DA
 conn = pyodbc.connect(connection_string)
 cursor = conn.cursor()
 app = FastAPI()
-
 
 #-------------------------------------------------Masuer register -----------------------------------------#
 class MasuerRegistration(BaseModel):
@@ -61,6 +62,7 @@ def register_masuer(new_masuer : MasuerRegistration):
         return {"message": "Customer registered successfully"}
     except:
         raise HTTPException(status_code=500, detail="The username already used.")
+
 
 #--------------------------------------------------REGISTER-------------------------------------------------#
 class CustomerRegistration(BaseModel):
@@ -123,6 +125,41 @@ def register(new_customer : CustomerRegistration):
         return {"message": "Customer registered successfully"}
     except:
         raise HTTPException(status_code=500, detail="The username already used.")
+
+
+
+#----------------------------------------------------LOGIN----------------------------------------------#
+class UserCredentials(BaseModel):
+    username: str
+    password: str
+
+
+def verify_credentials(username: str, password: str) -> bool:
+    """
+    function use for check username and password in database 
+
+    Args :
+        username : str,
+        password : str
+
+    Returns : Boolean if true login sucsesfull
+    """
+    try:
+
+        query = "SELECT COUNT(*) FROM Customer WHERE username = ? AND pasword = ?"
+        cursor.execute(query, (username, password))
+        result = cursor.fetchone()
+        return result[0] > 0
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+
+@app.post("/login")
+async def login(credentials: UserCredentials):
+    if verify_credentials(credentials.username, credentials.password):
+        return {"message": "Login successful"}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
 #--------------------------------------------------Masuer Login---------------------------------------------------#
 
@@ -219,102 +256,8 @@ async def massuertype(mtype: MassuerType):
         raise HTTPException(status_code=500, detail="Nothing.")
     
 
-
-#----------------------------------------------------LOGIN----------------------------------------------#
-class UserCredentials(BaseModel):
-    username: str
-    password: str
-
-
-def verify_credentials(username: str, password: str) -> bool:
-    """
-    function use for check username and password in database 
-
-    Args :
-        username : str,
-        password : str
-
-    Returns : Boolean if true login sucsesfull
-    """
-    try:
-
-        query = "SELECT COUNT(*) FROM Customer WHERE username = ? AND pasword = ?"
-        cursor.execute(query, (username, password))
-        result = cursor.fetchone()
-        return result[0] > 0
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-
-
-@app.post("/login")
-async def login(credentials: UserCredentials):
-    if verify_credentials(credentials.username, credentials.password):
-        return {"message": "Login successful"}
-    else:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-
-#---------------------------------------------------- MAIN PAGE --------------------------------------------------#
-import json
-
-def selectMasuer():
-    try:
-        query = """
-                select M.fname, M.lname, M.gender, M.massuertype
-                from Masuer M
-                where ( M.dayoff <> (select datename(weekday, getdate()) as CurrentDayOfWeek)) and (M.statusNow = 1) 
-                """      
-        cursor.execute(query)
-        results = cursor.fetchall()
-        # print(results)
-        # df = pd.DataFrame(results, columns=['fname', 'lname', 'gender', 'massuertype'])
-        # result_json = df.to_json(orient='index')
-
-        dict_list = [{'First Name': item[0], 'Last Name': item[1], 'Gender': item[2], 'Massage Type': item[3]} for item in results]
-        result_json = json.dumps(dict_list, ensure_ascii=False, indent=4)
-        return result_json
-    except Exception as e:
-        return str(e)
-
-@app.get("/main")
-async def main():
-    try:
-        result_json = selectMasuer() 
-        return result_json
-    except Exception as e:
-        return {"error": str(e)}
-
-
-#------------------------------------------------- SELECT MASSUER TYPE ---------------------------------------#
-class MassuerType(BaseModel):
-    massuertype : str
-
-def selectType(massuerType):
-    try:
-        query = """
-                select M.fname, M.lname
-                from Masuer M
-                where M.massuertype = ?
-                """
-        cursor.execute(query, (massuerType.massuertype,))  # You should pass a tuple as a parameter
-        results = cursor.fetchall()
-        print(results)
-        dict_list = [{'First Name': item[0], 'Last Name': item[1]} for item in results]
-        results_json = json.dumps(dict_list, ensure_ascii=False, indent=2)
-        return results_json
-    except Exception as e:
-        return str(e)
-
-# Your route handler
-@app.post("/main/massuertype")
-async def massuertype(mtype: MassuerType):
-    try:
-        results = selectType(mtype)
-        return results
-    except:
-        raise HTTPException(status_code=500, detail="Nothing.")
-    
 #------------------------------------------------- Queue and next Time -------------------------------------------------------#
+
 class selectDay(BaseModel):
     dateTimes : str
     massuertype : str
@@ -364,18 +307,19 @@ async def book_appointment(booking_info: init_buy):
     bookingId = len(execute_cursor) + 1
 
     points = timewant
-
+    if timewant < 30:
+        return{"message": "Only bookings of more than 30 minutes are allowed."}
     current_time = datetime.now()
     
     if timebookwill <= current_time:
         return {"message": "Booking time must be after the current time."}
 
     timeout = timebookwill + timedelta(minutes=timewant)
-
+    prices = timewant * 10
     try:
         current_time_str = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Check if existing bookings with the same masuerId and overlapping time periods
+        # Check if there are any existing bookings with the same masuerId and overlapping time periods
         conflict_query = """
                         select count(*) from Booking
                         where masuerID = ? and
@@ -392,7 +336,6 @@ async def book_appointment(booking_info: init_buy):
         
         # Calculate new points
         new_points = current_points + points
-        
         # Update the points in the Customer table
         update_point = """
                 update Customer
@@ -403,10 +346,10 @@ async def book_appointment(booking_info: init_buy):
         
         # Insert the booking into the database
         query = """
-                insert into Booking (bookingId, username, masuerID, massuertype, datTime, Timemasuer, Timeofout)
-                values (?, ?, ?, ?, ?, ?, ?)
+                insert into Booking (bookingId, username, masuerID, massuerName, datTime, Timemasuer, Timeofout, prices)
+                values (?, ?, ?, ?, ?, ?, ?, ?)
                 """
-        cursor.execute(query, (bookingId, username, masuerId, f"{masuerFName} {masuerLName}", current_time_str, timebookwill, timeout))
+        cursor.execute(query, (bookingId, username, masuerId, f"{masuerFName} {masuerLName}", current_time_str, timebookwill, timeout, prices))
         
         conn.commit()
 
@@ -451,7 +394,7 @@ def getMassuerIncome():
         qeury = """
                 select B.masuerID, B.massuerName, sum(B.prices) as TotalPrices
                 from Booking B
-                where B.Timemasuer >= dateadd(month, datediff(month, 0, getdate()), 0)
+                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
                 group by B.masuerID, B.massuerName
                 """
         cursor.execute(qeury)
@@ -473,14 +416,13 @@ async def massuerIncome():
         return {"error": str(e)}
     
 #------------------------------------------------- Massuer Salary ---------------------------------------------#
-
 def getMassuerSalary():
     try:
         qeury = """
                 select B.masuerID, B.massuerName, (sum(B.prices))*0.75 as TotalPrices
                 from Booking B
-                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
-                group by B.Timemasuer, B.massuerName
+                where B.Timemasuer >= dateadd(month, datediff(month, 0, getdate()), 0)
+                group by B.masuerID, B.massuerName
                 """
         cursor.execute(qeury)
         results = cursor.fetchall()
@@ -501,7 +443,6 @@ async def massuerSalary():
 
 
 #------------------------------------------------- Customer Review ---------------------------------------------#
-
 class Reviews(BaseModel):
     username : str
     customerId : int
@@ -527,9 +468,8 @@ def cusReview(review: Reviews):
         return {"message": "Review inserted successfully"}
     except Exception as e:
         return {"message": f"Error: {str(e)}"}
-
-
-
+#------------------------------------------------- RUN -------------------------------------------------------#
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=80)  # host is IPv4 of computer
+    uvicorn.run(app, host="localhost", port=8000)
+
