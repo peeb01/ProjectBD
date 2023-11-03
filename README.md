@@ -69,4 +69,13 @@ Day off is all day in the week:
   "localPlace": "string"
 }
 ```
-that's data input like register-masuer
+The data input like register-masuer
+
+
+## Endpoint: /login (Method: POST)
+```JSON
+{
+  "username": "string",
+  "password": "string"
+}
+```
