@@ -6,12 +6,10 @@
 ## Documentation run at http://localhost:8000/docs
 
 
-# /register-masuer : method post
-สำหรับ หมอนวดที่ต้องการสมัครเข้าทำงาน
-โดยต้องการข้อมูลเป็นรูปแบบ JSON 
+#### /register-masuer : method post
 
 \```
-Assistant: ```JSON
+```JSON
 {
   "fname": "string",
   "lname": "string",
