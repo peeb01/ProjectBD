@@ -21,11 +21,11 @@
   "dayoff": "string"
 }
 
-<span style="background-color: none;">The dateOfBirth field should be in the specified format, for example, "1996-Jul-15."</span>
+<span style="background-color: white;">The dateOfBirth field should be in the specified format, for example, "1996-Jul-15."</span>
 
-<span style="background-color: red;">The gender field should be a single character, either "M" for male or "F" for female.</span>
+<span style="background-color: white;">The gender field should be a single character, either "M" for male or "F" for female.</span>
 
-<span style="background-color: red;">The masuerType field should be one of the following options:</span>
+<span style="background-color: white;">The masuerType field should be one of the following options:</span>
 
 "นวดไทย"
 "นวดสวีเดน"
