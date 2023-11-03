@@ -21,19 +21,16 @@
   "dayoff": "string"
 }
 ```
-date of birth จะต้องอยู่ใน format ที่กำหนดให้ ตัวอย่างเช่น:
+The date of birth should be in the specified format, for example:
 
--1996-Jul-15
--2004-Sep-19
--1990-May-28
+- 1996-Jul-15
+- 2004-Sep-19
+- 1990-May-28
 
+The gender should be a single character, either:
 
-
-
-gender จะต้องเป็น 1 ตัวอักษร คือ:
-
--M
--F
+- M
+- F
 
 
 The masuerType field should be one of the following options:
