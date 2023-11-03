@@ -118,7 +118,7 @@ To select next time if Customer want will return masuer already in the time.
 }
 ```
 Date Time format Example: 
--2023-Nov-30
+- 2023-Nov-30
 
 The masuerType field should be one of the following options:
 
