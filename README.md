@@ -6,9 +6,9 @@
 ## Documentation run at http://localhost:8000/docs
 
 
-#### /register-masuer : method post
+### Endpoint: /register-masuer (Method: POST)
 
-\```
+
 ```JSON
 {
   "fname": "string",
@@ -20,15 +20,18 @@
   "masuerType": "string",
   "dayoff": "string"
 }
-``` text 
-date of birth จะต้องอยู่ใน format ที่กำหนดให้ ตัวอย่างเช่น 1996-Jul-15 แบบนี้เท่านั้น 
-gender จะต้องเป็น 1 ตัวอักษร คือ M, F
-masuerType มีให้เลือก 
---"นวดไทย", 
---"นวดสวีเดน", 
---"นวดเท้า", 
---"นวดศีรษะ", 
---"นวดกล้ามเนื้อคอ", 
---"นวดรวม",
---"นวดเชียง",
---"นวดน้ำมันร้อน"
+
+The dateOfBirth field should be in the specified format, for example, "1996-Jul-15."
+
+The gender field should be a single character, either "M" for male or "F" for female.
+
+The masuerType field should be one of the following options:
+
+"นวดไทย"
+"นวดสวีเดน"
+"นวดเท้า"
+"นวดศีรษะ"
+"นวดกล้ามเนื้อคอ"
+"นวดรวม"
+"นวดเชียง"
+"นวดน้ำมันร้อน"
