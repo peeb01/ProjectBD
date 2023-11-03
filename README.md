@@ -10,7 +10,8 @@
 สำหรับ หมอนวดที่ต้องการสมัครเข้าทำงาน
 โดยต้องการข้อมูลเป็นรูปแบบ JSON 
 
-\```JOSN
+\```
+Assistant: ```JSON
 {
   "fname": "string",
   "lname": "string",
@@ -21,4 +22,3 @@
   "masuerType": "string",
   "dayoff": "string"
 }
-\```
