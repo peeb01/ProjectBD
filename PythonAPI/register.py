@@ -18,6 +18,7 @@ cursor = conn.cursor()
 
 
 
+
 app = FastAPI()
 
 class CustomerRegistration(BaseModel):

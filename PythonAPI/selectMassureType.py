@@ -8,6 +8,7 @@ import json
 #-------------------------------------------------INITIALIZATION--------------------------------------------#
 
 
+
 DRIVER_NAME = 'ODBC Driver 17 for SQL Server'
 SERVER_NAME = 'DESKTOP-M9VL3MH\SQLEXPRESS'
 DATABASE_NAME = 'PP'

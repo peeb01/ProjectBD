@@ -19,6 +19,7 @@ app = FastAPI()
 
 
 
+
 class init_buy(BaseModel):
     username : str
     masuerId : int

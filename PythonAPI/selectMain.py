@@ -7,6 +7,7 @@ from datetime import date, datetime
 from pydantic import BaseModel, Field
 import pandas as pd
 
+
 #-------------------------------------------------INITIALIZATION--------------------------------------------#
 
 

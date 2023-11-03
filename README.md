@@ -9,6 +9,7 @@
 ## /register-masuer (Method: POST)
 
 
+
 ```JSON
 {
   "fname": "string",

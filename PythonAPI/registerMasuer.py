@@ -19,6 +19,7 @@ app = FastAPI()
 
 
 
+
 class MasuerRegistration(BaseModel):
     Id: int
     fname: str
