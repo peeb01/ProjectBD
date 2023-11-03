@@ -20,7 +20,7 @@
   "masuerType": "string",
   "dayoff": "string"
 }
-
+```
 <span style="background-color: white;">The dateOfBirth field should be in the specified format, for example, "1996-Jul-15."</span>
 
 <span style="background-color: white;">The gender field should be a single character, either "M" for male or "F" for female.</span>
