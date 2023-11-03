@@ -27,11 +27,11 @@ gender จะต้องเป็น 1 ตัวอักษร คือ M, F
 
 The masuerType field should be one of the following options:
 
-- <span style="font-size: 12px;">นวดไทย</span>
-- <span style="font-size: 12px;">นวดสวีเดน</span>
-- <span style="font-size: 12px;">นวดเท้า</span>
-- <span style="font-size: 12px;">นวดศีรษะ</span>
-- <span style="font-size: 12px;">นวดกล้ามเนื้อคอ</span>
-- <span style="font-size: 12px;">นวดรวม</span>
-- <span style="font-size: 12px;">นวดเชียง</span>
-- <span style="font-size: 12px;">นวดน้ำมันร้อน</span>
+- <span style="font-size: 8px;">นวดไทย</span>
+- <span style="font-size: 8px;">นวดสวีเดน</span>
+- <span style="font-size: 8px;">นวดเท้า</span>
+- <span style="font-size: 8px;">นวดศีรษะ</span>
+- <span style="font-size: 8px;">นวดกล้ามเนื้อคอ</span>
+- <span style="font-size: 8px;">นวดรวม</span>
+- <span style="font-size: 8px;">นวดเชียง</span>
+- <span style="font-size: 8px;">นวดน้ำมันร้อน</span>
