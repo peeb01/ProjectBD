@@ -6,7 +6,7 @@ import uvicorn
 from datetime import date, datetime
 from pydantic import BaseModel, Field
 import pandas as pd
-
+from fastapi.middleware.cors import CORSMiddleware
 #-------------------------------------------------INITIALIZATION--------------------------------------------#
 
 
@@ -19,9 +19,21 @@ conn = pyodbc.connect(connection_string)
 cursor = conn.cursor()
 app = FastAPI()
 
+origins = [
+    "http://localhost",  # Add your frontend's domain here
+    "http://localhost:3000",  # Add more origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow any origin for testing (restrict this in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow any HTTP method for testing (restrict this in production)
+    allow_headers=["*"],  # Allow any headers for testing (restrict this in production)
+)
+
 #-------------------------------------------------Masuer register -----------------------------------------#
 class MasuerRegistration(BaseModel):
-    Id: int
     fname: str
     lname: str
     dateOfBirth: str
@@ -31,37 +43,28 @@ class MasuerRegistration(BaseModel):
     masuerType: str
     dayoff: str
 
-def register_masuer(masuer_data : tuple):
-    data = cursor.execute("select * from Masuer").fetchall()
+def register_masuer(masuer_data: MasuerRegistration):
+    data = cursor.execute("SELECT * FROM Masuer").fetchall()
     Id = len(data) + 1
     try:
         query = """
-        insert into Masuer (masuerId, fname, lname, dateOfBirth, gender, phoneNum, email, massuertype, dayoff, statusNow)
+        INSERT INTO Masuer (masuerId, fname, lname, dateOfBirth, gender, phoneNum, email, massuertype, dayoff, statusNow)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-        cursor.execute(query, (Id,masuer_data))
+        cursor.execute(query, (Id, masuer_data.fname, masuer_data.lname, datetime.strptime(masuer_data.dateOfBirth, "%Y-%m-%d").date(),
+                              masuer_data.gender, masuer_data.phoneNum, masuer_data.email, masuer_data.masuerType, masuer_data.dayoff, 1))
         conn.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail="Database error")
 
 @app.post('/register-masuer')
-def register_masuer(new_masuer : MasuerRegistration):
+def register_masuer_endpoint(new_masuer: MasuerRegistration):
     try:
-        customer_data = (
-            new_masuer.Id,
-            new_masuer.fname,
-            new_masuer.lname,
-            datetime.strptime(new_masuer.dateOfBirth, "%Y-%m-%d").date(),
-            new_masuer.gender,
-            new_masuer.phoneNum,
-            new_masuer.email,
-            new_masuer.masuerType,
-            new_masuer.dayoff
-        )
-        register_masuer(customer_data)
-        return {"message": "Customer registered successfully"}
-    except:
-        raise HTTPException(status_code=500, detail="The username already used.")
+        register_masuer(new_masuer)
+        return {"message": "Masuer registered successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error: " + str(e))
+
 
 
 #--------------------------------------------------REGISTER-------------------------------------------------#
@@ -75,27 +78,9 @@ class CustomerRegistration(BaseModel):
     phoneNum: str
     email: str
     localPlace: str
-    points: int
 
 def register_customer(customer_data : tuple):
-    """
-    This function use for Register query into database
-    
-    Args :
-        the data for input             
-        (
-        username    : str,
-        password    : str,
-        fname       : str,     
-        lname       : str,
-        dateOfBirth : str --> convert to datetime datetime.strptime(dateOfBirth, "%Y-%m-%d").date(),
-        gender      : str,
-        phoneNum    : str,
-        email       : str,
-        localOlace  : str,
-        points      : int               
-        )
-    """
+
     try:
         query = """
         INSERT INTO Customer (username, pasword, fname, lname, dateOfBirth, gender, phoneNum, email, localPlace, points)
@@ -119,12 +104,12 @@ def register(new_customer : CustomerRegistration):
             new_customer.phoneNum,
             new_customer.email,
             new_customer.localPlace,
-            new_customer.points,
+            0
         )
         register_customer(customer_data)
         return {"message": "Customer registered successfully"}
     except:
-        raise HTTPException(status_code=500, detail="The username already used.")
+        raise HTTPException(status_code=500, detail="Database failed.")
 
 
 
@@ -387,8 +372,7 @@ def selectMasuerScheduling(massuer: MassuerScheduiling):
     return results_json
 
 
-#------------------------------------------------- Massuer Income ---------------------------------------------#
-
+#------------------------------------------------- Massuer Income -------------------------------------------
 def getMassuerIncome():
     try:
         qeury = """
@@ -472,5 +456,3 @@ def cusReview(review: Reviews):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
-
-

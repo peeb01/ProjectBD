@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Page</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form id="registerForm">
+        <input type="checkbox" id="userCheckbox" value="user"> User
+        <input type="checkbox" id="masuerCheckbox" value="masuer"> Masuer
+        <br>
+        <!-- User Registration Fields -->
+        <div id="userRegistration" style="display: none;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <label for="fname">First Name:</label>
+            <input type="text" id="fname" name="fname" required>
+            <br>
+            <label for="lname">Last Name:</label>
+            <input type="text" id="lname" name="lname" required>
+            <br>
+            <label for="dateOfBirth">Date of Birth (YYYY-MM-DD):</label>
+            <input type="text" id="dateOfBirth" name="dateOfBirth" required>
+            <br>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+            </select>
+            <br>
+            <label for="phoneNum">Phone Number:</label>
+            <input type="text" id="phoneNum" name="phoneNum" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="localPlace">Local Place:</label>
+            <input type="text" id="localPlace" name="localPlace" required>
+        </div>
+        <!-- Masuer Registration Fields -->
+        <div id="masuerCodeDiv" style="display: none;">
+            <label for="masuerCode">Masuer Code:</label>
+            <input type="text" id="masuerCode" name="masuerCode" required>
+            <button type="button" id="masuerCodeCheck">Check Code</button>
+        </div>
+        <!-- Masuer Registration Fields (initially hidden) -->
+            <div id="masuerFields" style="display: none;">
+                <label for="fname">First Name:</label>
+                <input type="text" id="masuerFname" name="masuerFname" required>
+                <br>
+                <label for="lname">Last Name:</label>
+                <input type="text" id="masuerLname" name="masuerLname" required>
+                <br>
+                <label for="dateOfBirth">Date of Birth (YYYY-MM-DD):</label>
+                <input type="text" id="masuerDateOfBirth" name="masuerDateOfBirth" required>
+                <br>
+                <label for="gender">Gender:</label>
+                <select id="masuerGender" name="masuerGender">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+                <br>
+                <label for="phoneNum">Phone Number:</label>
+                <input type="text" id="masuerPhoneNum" name="masuerPhoneNum" required>
+                <br>
+                <label for="email">Email:</label>
+                <input type="email" id="masuerEmail" name="masuerEmail" required>
+                <br>
+                <label for="masuerType">Masuer Type:</label>
+                <select id="masuerType" name="masuerType">
+                    <option value="นวดไทย">นวดไทย</option>
+                    <option value="นวดสวีเดน">นวดสวีเดน</option>
+                    <option value="นวดเท้า">นวดเท้า</option>
+                    <!-- Add more masuer types here -->
+                </select>
+                <br>
+                <label for="dayoff">Day Off:</label>
+                <select id="masuerDayoff" name="masuerDayoff">
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+            </div>
+            <button type="button" id="registerButton">Register</button>
+        </form>
+
+        <script>
+            const userCheckbox = document.getElementById("userCheckbox");
+            const masuerCheckbox = document.getElementById("masuerCheckbox");
+            const masuerCodeDiv = document.getElementById("masuerCodeDiv");
+            const masuerCodeInput = document.getElementById("masuerCode");
+            const masuerCodeCheckButton = document.getElementById("masuerCodeCheck");
+            const masuerFields = document.getElementById("masuerFields");
+            const userFields = document.getElementById("userRegistration");
+            const registerButton = document.getElementById("registerButton");
+        
+            userCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    masuerCodeDiv.style.display = "none";
+                    masuerFields.style.display = "none";
+                    userFields.style.display = "block";
+                    masuerCheckbox.checked = false;
+                } else {
+                    userFields.style.display = "none";
+                }
+            });
+        
+            masuerCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    masuerCodeDiv.style.display = "block";
+                    masuerFields.style.display = "none";
+                    userFields.style.display = "none";
+                    masuerCodeInput.value = "";
+                    masuerCodeInput.focus();
+                    userCheckbox.checked = false;
+                } else {
+                    masuerCodeDiv.style.display = "none"; // Change "style display" to "style.display"
+                    masuerFields.style.display = "none";
+                }
+            });
+        
+            masuerCodeCheckButton.addEventListener('click', function() {
+                const code = masuerCodeInput.value;
+                if (code === "kkkk") {
+                    alert("Code is valid. You can proceed to register as a Masuer.");
+                    masuerFields.style.display = "block";
+                } else {
+                    alert("Code is invalid. Please enter the correct code to proceed.");
+                    masuerFields.style.display = "none";
+                }
+            });
+        
+            registerButton.addEventListener('click', function() {
+                if (userCheckbox.checked) {
+                    // User registration
+                    const userData = {
+                        username: document.getElementById("username").value,
+                        pasword: document.getElementById("password").value, // Corrected field name
+                        fname: document.getElementById("fname").value,
+                        lname: document.getElementById("lname").value,
+                        dateOfBirth: document.getElementById("dateOfBirth").value,
+                        gender: document.getElementById("gender").value,
+                        phoneNum: document.getElementById("phoneNum").value,
+                        email: document.getElementById("email").value,
+                        localPlace: document.getElementById("localPlace").value
+                    };
+        
+                    fetch('http://localhost:8000/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.message === "Customer registered successfully") {
+                            window.location.href = "login.html"; // Redirect to login.html
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else if (masuerCheckbox.checked) {
+                    // Masuer registration
+                    const masuerData = {
+                        fname: document.getElementById("masuerFname").value,
+                        lname: document.getElementById("masuerLname").value,
+                        dateOfBirth: document.getElementById("masuerDateOfBirth").value,
+                        gender: document.getElementById("masuerGender").value,
+                        phoneNum: document.getElementById("masuerPhoneNum").value,
+                        email: document.getElementById("masuerEmail").value,
+                        masuerType: document.getElementById("masuerType").value,
+                        dayoff: document.getElementById("masuerDayoff").value
+                    };
+        
+                    fetch('http://localhost:8000/register-masuer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(masuerData),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.message === "Masuer registered successfully") {
+                            window.location.href = "login.html"; // Redirect to login.html
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        </script>
+
+</body>
+</html>

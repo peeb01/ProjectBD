@@ -20,6 +20,7 @@ create table Customer(
 -- 	Foreign Key (customerId) References Customer(customerId),
 -- );
 
+
 create table Masuer(
 	masuerId int Primary Key,
 	fname varchar(255) not null,
@@ -30,8 +31,7 @@ create table Masuer(
 	email varchar(255),
 	massuertype varchar(255) not null,
 	dayoff varchar not null,
-	statusNow bit not null,
-	salaryCode int not null
+	statusNow bit not null
 );
 
 create table CustomerReview(

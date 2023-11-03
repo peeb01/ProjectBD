@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <input type="checkbox" id="userCheckbox" value="user"> User
+        <input type="checkbox" id="masuerCheckbox" value="masuer"> Masuer
+        <br>
+        <div id="userLogin" style="display: none;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div id="masuerLogin" style="display: none;">
+            <label for="masuerId">Masuer ID:</label>
+            <input type="number" id="masuerId" name="masuerId">
+            <br>
+            <label for="masuerName">Masuer Name:</label>
+            <input type="text" id="masuerName" name="masuerName">
+        </div>
+        <button type="button" id="loginButton">Login</button>
+        <a href="register.html" class="register-link">Register</a>
+    </form>
+
+    <script>
+        // Event listeners to toggle the login form visibility based on checkboxes
+        const userCheckbox = document.getElementById("userCheckbox");
+        const masuerCheckbox = document.getElementById("masuerCheckbox");
+        const userLogin = document.getElementById("userLogin");
+        const masuerLogin = document.getElementById("masuerLogin");
+
+        userCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                userLogin.style.display = "block";
+                masuerLogin.style.display = "none";
+                masuerCheckbox.checked = false; // Uncheck masuer
+            } else {
+                userLogin.style.display = "none";
+            }
+        });
+
+        masuerCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                masuerLogin.style.display = "block";
+                userLogin.style.display = "none";
+                userCheckbox.checked = false; // Uncheck user
+            } else {
+                masuerLogin.style.display = "none";
+            }
+        });
+
+        // Event listener for the login button
+        const loginButton = document.getElementById("loginButton");
+        loginButton.addEventListener("click", function() {
+            // Determine which form is active (user or masuer)
+            if (userCheckbox.checked) {
+                const username = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+
+                // Send a POST request with user credentials
+                fetch("http://localhost:8000/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Login successful") {
+                        window.location.href = "main.html"; // Redirect on success
+                    } else {
+                        alert("Login failed. Please check your credentials.");
+                    }
+                });
+            } else if (masuerCheckbox.checked) {
+                const masuerId = document.getElementById("masuerId").value;
+                const masuerName = document.getElementById("masuerName").value;
+
+                // Send a POST request with masuer credentials
+                fetch("http://localhost:8000/login-masuer", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        Id: masuerId,
+                        masuerName: masuerName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Login successful") {
+                        window.location.href = "main.html"; // Redirect on success
+                    } else {
+                        alert("Login failed. Please check your credentials.");
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
