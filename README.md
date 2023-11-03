@@ -44,3 +44,11 @@ The masuerType field should be one of the following options:
 - นวดเชียง
 - นวดน้ำมันร้อน
 
+Day off is all day in the week:
+
+- Monday
+- Tuesday
+- Wednesday
+- Thursday
+- Friday
+- Saturday
