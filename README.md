@@ -1,6 +1,6 @@
 # ProjectBD
 
-
+# ยังไม่ได้เปิด port ให้เชื่อมต่อ
 ### run at main.py
 
 ### Documentation run at http://localhost:8000/docs
