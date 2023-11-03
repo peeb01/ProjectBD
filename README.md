@@ -1,12 +1,12 @@
 # ProjectBD
 
 
-# run at main.py
+### run at main.py
 
-## Documentation run at http://localhost:8000/docs
+### Documentation run at http://localhost:8000/docs
 
 
-### Endpoint: /register-masuer (Method: POST)
+## Endpoint: /register-masuer (Method: POST)
 
 
 ```JSON
@@ -21,11 +21,11 @@
   "dayoff": "string"
 }
 ```
-<span style="background-color: white;">The dateOfBirth field should be in the specified format, for example, "1996-Jul-15."</span>
+date of birth จะต้องอยู่ใน format ที่กำหนดให้ ตัวอย่างเช่น 1996-Jul-15 แบบนี้เท่านั้น 
 
-<span style="background-color: white;">The gender field should be a single character, either "M" for male or "F" for female.</span>
+gender จะต้องเป็น 1 ตัวอักษร คือ M, F
 
-<span style="background-color: white;">The masuerType field should be one of the following options:</span>
+masuerType มีให้เลือก 
 
 "นวดไทย"
 "นวดสวีเดน"
