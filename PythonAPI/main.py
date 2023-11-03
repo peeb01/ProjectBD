@@ -532,4 +532,4 @@ def cusReview(review: Reviews):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="192.168.3.2", port=80)  # host is IPv4 of computer
+    uvicorn.run("main:app", host="localhost", port=80)  # host is IPv4 of computer
