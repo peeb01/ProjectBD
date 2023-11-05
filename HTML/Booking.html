@@ -224,9 +224,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                
-                // Display a success message
-                alert("Booking Successful: " + data.message + '\n Price = ' + String(timeWant*10));
+                if (data.message === "Appointment booked successfully") {
+                    alert("Booking Successful: " + data.message + '\n Price = ' + String(timeWant*10));
+                } else {
+                    alert("Booking Failed");
+                }
             })
             .catch(error => {
                 console.error("Booking request failed:", error);

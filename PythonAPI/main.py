@@ -362,17 +362,16 @@ def selectMasuerScheduling(massuer: MassuerScheduiling):
 def getMassuerIncome():
     try:
         qeury = """
-                select B.masuerID, B.massuerName, sum(B.prices) as TotalPrices
+                select B.masuerID, sum(B.prices) as TotalPrices
                 from Booking B
                 where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
-                group by B.masuerID, B.massuerName
+                group by B.masuerID
                 """
         cursor.execute(qeury)
         results = cursor.fetchall()
         
-        dict_list = [{'Masuer ID': item[0],'Masuer Name': item[1], 'Total income': item[2]} for item in results]
-        results_json = json.dumps(dict_list, ensure_ascii=False, indent=3)
-        return results_json   
+        dict_list = [{'Masuer ID': item[0], 'Total income': item[1]} for item in results]
+        return JSONResponse(content=dict_list)
 
     except Exception as e:
         return str(e)
@@ -447,10 +446,12 @@ class selectReview(BaseModel):
 def selectReviews(review: selectReview):
     try:
         qeury = """
-            select B.bookingId, B.Timemasuer, B.prices
-            from Booking B
-            left join CustomerReview Cr ON B.bookingId = Cr.bookingId
-            where Cr.bookingId IS NULL AND B.username = ?;
+                select B.bookingId, B.Timemasuer, B.prices
+                from Booking B
+                left join CustomerReview Cr on B.bookingId = Cr.bookingId
+                where Cr.bookingId IS NULL
+                and B.username = ?
+                and B.Timeofout <= getdate();
                 """
         cursor.execute(qeury, review.username)
         results = cursor.fetchall()
@@ -460,6 +461,23 @@ def selectReviews(review: selectReview):
         return results_json   
     except Exception as e:
         return str(e)
+
+#------------------------------------------------- Income masuer GET -------------------------------------------------------#
+class viewStory(BaseModel):
+    username : str
+
+@app.post('/viewhistory')
+def getHistory(historys : viewStory):
+    username = historys.username
+    qeury = """
+            select C.fname, M.fname, M.massuerType, B.Timemasuer 
+            from Booking B, Masuer M, Customer C
+            where (B.username = ?) and (B.username = C.username) and (B.masuerID = M.masuerId) 
+            """
+    cursor.execute(qeury, username)
+    results = cursor.fetchall()
+    dict_list = [{'Name ': item[0],'Masuer Name': str(item[1]), 'Type':item[2], 'Time': str(item[3])} for item in results]
+    return JSONResponse(content=dict_list)
 
 #------------------------------------------------- RUN -------------------------------------------------------#
 
