@@ -2,30 +2,118 @@
 <html>
 <head>
     <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        .login-container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .btn-login {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+
+        .btn-register {
+            text-decoration: none;
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+        }
+
+        .btn-register:hover {
+            background-color: #286090;
+        }
+
+        #userLogin, #masuerLogin {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form id="loginForm">
-        <input type="checkbox" id="userCheckbox" value="user"> User
-        <input type="checkbox" id="masuerCheckbox" value="masuer"> Masuer
-        <br>
+    <div class="login-container">
+        <h1>Login</h1>
+        <div class="form-group">
+            <input type="checkbox" id="userCheckbox" value="user"> User
+            <input type="checkbox" id="masuerCheckbox" value="masuer"> Masuer
+        </div>
+
         <div id="userLogin" style="display: none;">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for "password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
         </div>
+
         <div id="masuerLogin" style="display: none;">
-            <label for="masuerId">Masuer ID:</label>
-            <input type="number" id="masuerId" name="masuerId">
-            <br>
-            <label for="masuerName">Masuer Name:</label>
-            <input type="text" id="masuerName" name="masuerName">
+            <div class="form-group">
+                <label for="masuerId">Masuer ID:</label>
+                <input type="number" id="masuerId" name="masuerId">
+            </div>
+            <div class="form-group">
+                <label for="masuerName">Masuer Name:</label>
+                <input type="text" id="masuerName" name="masuerName">
+            </div>
         </div>
-        <button type="button" id="loginButton">Login</button>
-        <a href="register.html" class="register-link">Register</a>
-    </form>
+
+        <div class="btn-container">
+            <button type="button" id="loginButton" class="btn-login">Login</button>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </div>
 
     <script>
         // Event listeners to toggle the login form visibility based on checkboxes
@@ -55,6 +143,7 @@
         });
 
         // Event listener for the login button
+        // Event listener for the login button
         const loginButton = document.getElementById("loginButton");
         loginButton.addEventListener("click", function() {
             // Determine which form is active (user or masuer)
@@ -62,7 +151,6 @@
                 const username = document.getElementById("username").value;
                 const password = document.getElementById("password").value;
 
-                // Send a POST request with user credentials
                 fetch("http://localhost:8000/login", {
                     method: "POST",
                     headers: {
@@ -76,7 +164,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === "Login successful") {
-                        window.location.href = "main.html"; // Redirect on success
+                        const username = document.getElementById("username").value;
+                        localStorage.setItem("username", username);
+                        window.location.href = "main.html"; // Redirect on success for users
                     } else {
                         alert("Login failed. Please check your credentials.");
                     }
@@ -85,7 +175,6 @@
                 const masuerId = document.getElementById("masuerId").value;
                 const masuerName = document.getElementById("masuerName").value;
 
-                // Send a POST request with masuer credentials
                 fetch("http://localhost:8000/login-masuer", {
                     method: "POST",
                     headers: {
@@ -99,7 +188,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === "Login successful") {
-                        window.location.href = "main.html"; // Redirect on success
+                        localStorage.removeItem("username"); // Remove any previous username from localStorage
+                        localStorage.setItem("masuerId", masuerId); // Store masuerId
+                        window.location.href = "masuermain.html"; // Redirect on success for masuers
                     } else {
                         alert("Login failed. Please check your credentials.");
                     }
@@ -107,6 +198,5 @@
             }
         });
     </script>
-
 </body>
 </html>

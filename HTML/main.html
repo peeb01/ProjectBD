@@ -1,13 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-    <meta data-n-head="ssr" charset="utf-8">
-    <meta data-n-head="ssr" name="viewport" content="width=device-width, initial-scale=1">
-    <meta data-n-head="ssr" name="google-site-verification" content="psuNUkP_lmfdQYm62npzsQ8-gm5JphsU">
-    <meta data-n-head="ssr" data-hid="charset" charset="utf-8">
-    <meta data-n-head="ssr" data-hid="mobile-web-app-capable" name="mobile-web-app-capable" content="yes">
-    <meta data-n-head="ssr" data-hid="og:type" name="og:type" property="og:type" content="website">
-    <meta data-n-head="ssr" data-hid="og:title" name="og:title" content="PUNPUN.com เว็บไซต์รวมไซด์รวมหมอนวดที่ดีที่สุด">
-    <meta data-n-head="ssr" data-hid="og:site_name" name="og:site_name" property="og:site_name" content="PUNPUN.com เว็บไซต์รวมไซด์ไลน์ โพสต์รับงาน ฟิวแฟน">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massage Therapists</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-    
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn_review {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            text-align: center;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn_review:hover {
+            background-color: #45a049;
+        }
+
+        .btn_bookingtime {
+            text-align: center;
+        }
+
+        .btn_bookingtime button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn_bookingtime button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #bookingForm {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Massage Therapists</h1>
+    <select id="massageType">
+        <option value="None">None</option>
+        <option value="นวดสวีเดน">นวดสวีเดน</option>
+        <option value="นวดศีรษะ">นวดศีรษะ</option>
+        <option value="นวดกล้ามเนื้อคอ">นวดกล้ามเนื้อคอ</option>
+        <option value="นวดเท้า">นวดเท้า</option>
+        <option value="นวดน้ำมันร้อน">นวดน้ำมันร้อน</option>
+        <option value="นวดเชียง">นวดเชียง</option>
+        <option value="นวดไทย">นวดไทย</option>
+    </select>
+    <a href="review.html" class="btn_review">Review</a>
+    <div class="btn_bookingtime">
+        <button type="button" id="bookingbtnX">Booking Select Time!</button>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div id="therapists"></div>
+
+    <div id="bookingForm" style="display: none;">
+        <h2>Booking Form</h2>
+        <form id="bookingDataForm">
+            <label for="masuerId">Masuer ID:</label>
+            <input type="number" id="masuerId" name="masuerId" placeholder="Enter Masuer ID" required><br>
+
+            <label for="time_bookingwant">Desired Date and Time (YYYY-MM-DD HH-MM-SS):</label>
+            <input type="text" id="time_bookingwant" name="time_bookingwant" placeholder="Enter Date and Time" required><br>
+
+            <label for="timewant">Time Duration (minutes):</label>
+            <select id="timewant" name="timewant" required>
+                <option value="30">30 minutes</option>
+                <option value="40">40 minutes</option>
+                <option value="50">50 minutes</option>
+                <option value="60">60 minutes</option>
+                <option value="70">70 minutes</option>
+                <option value="80">80 minutes</option>
+                <option value="90">90 minutes</option>
+                <option value="100">100 minutes</option>
+                <option value="110">110 minutes</option>
+                <option value="120">120 minutes</option>
+                <option value="130">130 minutes</option>
+                <option value="150">150 minutes</option>
+                <option value="160">160 minutes</option>
+                <option value="170">170 minutes</option>
+                <option value="180">180 minutes</option>
+                <!-- Add other time durations as needed -->
+            </select>
+
+            <button type="submit" id="bookAppointment">Book Appointment</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to check login status
+        function checkLoginStatus() {
+            const username = localStorage.getItem("username");
+            if (!username) {
+                window.location.href = "login.html"; // Redirect to the login page if not logged in
+            }
+        }
+
+        // Check the login status when the page loads
+        window.onload = checkLoginStatus;
+
+        // Function to get therapists based on the selected massage type
+        function getTherapists(massageType) {
+            fetch("http://localhost:8000/main")
+                .then(response => response.json())
+                .then(data => {
+                    // Parse the JSON data
+                    const parsedData = JSON.parse(data);
+
+                    // Filter data based on selected massage type
+                    const filteredData = (massageType !== "None") ? parsedData.filter(item => item['Massage Type'] === massageType) : parsedData;
+                    displayTherapists(filteredData);
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Function to display therapists in a table
+        function displayTherapists(therapists) {
+            const therapistsDiv = document.getElementById("therapists");
+            therapistsDiv.innerHTML = ""; // Clear previous data
+
+            if (therapists.length === 0) {
+                therapistsDiv.innerHTML = "No therapists found for the selected massage type.";
+            } else {
+                const table = document.createElement("table");
+                const tableHeader = table.createTHead();
+                const headerRow = tableHeader.insertRow(0);
+                const headers = Object.keys(therapists[0]);
+
+                headers.forEach(headerText => {
+                    const header = document.createElement("th");
+                    header.textContent = headerText;
+                    headerRow.appendChild(header);
+                });
+
+                const tableBody = table.createTBody();
+                therapists.forEach(therapist => {
+                    const row = tableBody.insertRow();
+                    headers.forEach(header => {
+                        const cell = row.insertCell();
+                        cell.textContent = therapist[header];
+                    });
+
+                    // Add a booking button for each therapist
+                    const bookingCell = row.insertCell();
+                    const bookingButton = document.createElement("button");
+                    bookingButton.textContent = "Booking";
+                    bookingButton.addEventListener("click", () => {
+                        // Show the booking form when the button is clicked
+                        document.getElementById("bookingForm").style.display = "block";
+                    });
+                    bookingCell.appendChild(bookingButton);
+                });
+
+                therapistsDiv.appendChild(table);
+            }
+        }
+
+        // Event listener for the massage type selection
+        const massageTypeSelect = document.getElementById("massageType");
+        massageTypeSelect.addEventListener("change", function() {
+            const selectedMassageType = massageTypeSelect.value;
+            getTherapists(selectedMassageType);
+        });
+
+        // Initialize therapists with the "None" option
+        getTherapists("None");
+
+        // Add a submit event listener to the booking data form
+        const bookingDataForm = document.getElementById("bookingDataForm");
+        bookingDataForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const formData = new FormData(bookingDataForm);
+
+            const masuerId = formData.get("masuerId");
+            const time_bookingwant = formData.get("time_bookingwant");
+            const timewant = formData.get("timewant");
+
+            const storedUsername = localStorage.getItem("username");
+
+            const requestData = {
+                username: storedUsername,
+                masuerId: parseInt(masuerId),
+                time_bookingwant,
+                timewant: parseInt(timewant)
+            };
+
+            fetch("http://localhost:8000/main/massuertype/selectnexttime/book-appointment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Appointment booked successfully") {
+                    alert("Booking Successful" + ' Price = ', String(timewant*10));
+                } else {
+                    alert("Booking Failed");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Booking Failed");
+            });
+
+            // Hide the booking form after submission
+            document.getElementById("bookingForm").style.display = "none";
+        });
+        const bookingButtonX = document.getElementById("bookingbtnX");
+        bookingButtonX.addEventListener("click", function () {
+            window.location.href = "Booking.html";
+        });
+    </script>
+</body>
+</html>

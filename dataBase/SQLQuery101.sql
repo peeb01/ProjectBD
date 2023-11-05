@@ -36,11 +36,9 @@ create table Masuer(
 
 create table CustomerReview(
 	reviewId int Primary Key,
-	customerId int,
-	masuerId int,
+	customerId int not null,
 	reviewText varchar(255) not null,
 	Foreign Key (customerId) References Customer(customerId),
-	Foreign Key (masuerId) References Masuer(masuerId)
 );
 
 create table Salary(

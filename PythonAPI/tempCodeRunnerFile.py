@@ -1,1 +1,1 @@
-Login successful
+Review inserted successfully

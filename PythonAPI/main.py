@@ -7,6 +7,7 @@ from datetime import date, datetime
 from pydantic import BaseModel, Field
 import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 #-------------------------------------------------INITIALIZATION--------------------------------------------#
 
 
@@ -120,15 +121,6 @@ class UserCredentials(BaseModel):
 
 
 def verify_credentials(username: str, password: str) -> bool:
-    """
-    function use for check username and password in database 
-
-    Args :
-        username : str,
-        password : str
-
-    Returns : Boolean if true login sucsesfull
-    """
     try:
 
         query = "SELECT COUNT(*) FROM Customer WHERE username = ? AND pasword = ?"
@@ -186,7 +178,7 @@ import json
 def selectMasuer():
     try:
         query = """
-                select M.fname, M.lname, M.gender, M.massuertype
+                select M.masuerId, M.fname, M.lname, M.gender, M.massuertype
                 from Masuer M
                 where ( M.dayoff <> (select datename(weekday, getdate()) as CurrentDayOfWeek)) and (M.statusNow = 1) 
                 """      
@@ -196,8 +188,8 @@ def selectMasuer():
         # df = pd.DataFrame(results, columns=['fname', 'lname', 'gender', 'massuertype'])
         # result_json = df.to_json(orient='index')
 
-        dict_list = [{'First Name': item[0], 'Last Name': item[1], 'Gender': item[2], 'Massage Type': item[3]} for item in results]
-        result_json = json.dumps(dict_list, ensure_ascii=False, indent=4)
+        dict_list = [{'ID' : item[0],'First Name': item[1], 'Last Name': item[2], 'Gender': item[3], 'Massage Type': item[4]} for item in results]
+        result_json = json.dumps(dict_list, ensure_ascii=False, indent=5)
         return result_json
     except Exception as e:
         return str(e)
@@ -225,7 +217,6 @@ def selectType(massuerType):
                 """
         cursor.execute(query, (massuerType.massuertype,))
         results = cursor.fetchall()
-        print(results)
         dict_list = [{'First Name': item[0], 'Last Name': item[1]} for item in results]
         results_json = json.dumps(dict_list, ensure_ascii=False, indent=2)
         return results_json
@@ -242,17 +233,17 @@ async def massuertype(mtype: MassuerType):
     
 
 #------------------------------------------------- Queue and next Time -------------------------------------------------------#
-
 class selectDay(BaseModel):
-    dateTimes : str
-    massuertype : str
+    dateTimes: str
+    massuertype: str
 
 @app.post("/main/massuertype/selectnexttime")
 async def select_next_time(select_day: selectDay):
     input_date_str = select_day.dateTimes
     massuertype = select_day.massuertype
 
-    input_date = datetime.strptime(input_date_str, "%Y-%b-%d")
+    # Parse the date with the correct format (e.g., "2023-12-15")
+    input_date = datetime.strptime(input_date_str, "%Y-%m-%d")
 
     day_of_week = input_date.strftime("%A")
     query = """
@@ -261,11 +252,13 @@ async def select_next_time(select_day: selectDay):
             where M.dayoff <> ? and M.massuertype = ? and M.statusNow = 1
             """
 
+    # Assuming you have a cursor and database connection set up
     cursor.execute(query, (day_of_week, massuertype))
     result = cursor.fetchall()
-    dict_list = [{'ID': item[0],'First Name': item[1], 'Last Name': item[2]} for item in result]
-    results_json = json.dumps(dict_list, ensure_ascii=False, indent=3)
-    return results_json
+    dict_list = [{'ID': item[0], 'First Name': item[1], 'Last Name': item[2]} for item in result]
+    
+    # Return the result as JSON
+    return dict_list
 
 #-------------------------------------------- Buy, Booking -----------------------------------------#
 from datetime import timedelta
@@ -273,8 +266,6 @@ from datetime import timedelta
 class init_buy(BaseModel):
     username : str
     masuerId : int
-    masuerFName : str
-    masuerLName : str
     timewant : int      # minutes
     time_bookingwant : str
 
@@ -284,10 +275,8 @@ async def book_appointment(booking_info: init_buy):
 
     username = booking_info.username
     masuerId = booking_info.masuerId
-    masuerFName = booking_info.masuerFName
-    masuerLName = booking_info.masuerLName
     timewant = booking_info.timewant
-    timebookwill = datetime.strptime(booking_info.time_bookingwant, "%Y-%b-%d %H-%M-%S")
+    timebookwill = datetime.strptime(booking_info.time_bookingwant, "%Y-%m-%d %H-%M-%S")
     execute_cursor = cursor.execute("select * from Booking").fetchall()
     bookingId = len(execute_cursor) + 1
 
@@ -331,10 +320,10 @@ async def book_appointment(booking_info: init_buy):
         
         # Insert the booking into the database
         query = """
-                insert into Booking (bookingId, username, masuerID, massuerName, datTime, Timemasuer, Timeofout, prices)
-                values (?, ?, ?, ?, ?, ?, ?, ?)
+                insert into Booking (bookingId, username, masuerID, datTime, Timemasuer, Timeofout, prices)
+                values (?, ?, ?, ?, ?, ?, ?)
                 """
-        cursor.execute(query, (bookingId, username, masuerId, f"{masuerFName} {masuerLName}", current_time_str, timebookwill, timeout, prices))
+        cursor.execute(query, (bookingId, username, masuerId, current_time_str, timebookwill, timeout, prices))
         
         conn.commit()
 
@@ -343,12 +332,14 @@ async def book_appointment(booking_info: init_buy):
         return {"message": f"Error: {str(e)}"}
 
 #--------------------------------------------------Massuer Scheduling------------------------------------------#
+
+
 class MassuerScheduiling(BaseModel):
-    massuerId : int
+    masuerId: int
 
 @app.post("/main/massuerscheduling")
 def selectMasuerScheduling(massuer: MassuerScheduiling):
-    msuerId = massuer.massuerId
+    masuerId = massuer.masuerId
 
     current_time = datetime.now()
 
@@ -357,19 +348,14 @@ def selectMasuerScheduling(massuer: MassuerScheduiling):
             from Customer C, Masuer M, Booking B
             where (B.username = C.username) and (M.masuerId = B.masuerID) and (B.masuerID = ?) and (B.Timemasuer >= ?)
             """
-    cursor.execute(query, (msuerId, current_time))
+    cursor.execute(query, (masuerId, current_time))
     result = cursor.fetchall()
-    dict_list = [{'Masuer firstname': item[0], 'Masuer lastname': item[1], 'Customer name': item[2], 'start Time': item[3]} for item in result]
+    dict_list = [{'Masuer firstname': item[0], 'Masuer lastname': item[1], 'Customer name': item[2], 'start Time': item[3].isoformat()} for item in result]
 
-    # Convert datetime to strings
-    for item in dict_list:
-        item['start Time'] = item['start Time'].isoformat()
-
-    # Sort the results by 'start Time' 
+    # Sort the results by 'start Time'
     sorted_dict_list = sorted(dict_list, key=lambda item: item['start Time'])
 
-    results_json = json.dumps(sorted_dict_list, ensure_ascii=False, indent=4)
-    return results_json
+    return JSONResponse(content=sorted_dict_list)
 
 
 #------------------------------------------------- Massuer Income -------------------------------------------
@@ -429,29 +415,52 @@ async def massuerSalary():
 #------------------------------------------------- Customer Review ---------------------------------------------#
 class Reviews(BaseModel):
     username : str
-    customerId : int
+    bookingId : int
     reviewsText : str
 
 @app.post('/reviews')
 def cusReview(review: Reviews):
     username = review.username
-    massuerId = review.customerId
     text = review.reviewsText
+    bookingId = review.bookingId
     ids = cursor.execute("select * from CustomerReview").fetchall()
     reviewId = len(ids) + 1
     current_time = datetime.now()
     try:
         query = """
-                insert into CustomerReview(reviewId, username, masuerId, reviewText, dateTim)
+                insert into CustomerReview(reviewId, username, reviewText, dateTim, bookingId)
                 values (?, ?, ?, ?, ?)
                 """
 
-        cursor.execute(query, (reviewId, username, massuerId, text, current_time))
+        cursor.execute(query, (reviewId, username, text, current_time, bookingId))
         conn.commit()
 
         return {"message": "Review inserted successfully"}
     except Exception as e:
         return {"message": f"Error: {str(e)}"}
+    
+class selectReview(BaseModel):
+    username : str
+
+
+@app.post('/selectreview')
+def selectReviews(review: selectReview):
+    try:
+        qeury = """
+            select B.bookingId, B.Timemasuer, B.prices
+            from Booking B
+            left join CustomerReview Cr ON B.bookingId = Cr.bookingId
+            where Cr.bookingId IS NULL AND B.username = ?;
+                """
+        cursor.execute(qeury, review.username)
+        results = cursor.fetchall()
+        
+        dict_list = [{'Booking ID': item[0],'Time Masuee': str(item[1]), 'Prices':item[2]} for item in results]
+        results_json = json.dumps(dict_list, ensure_ascii=False, indent=3)
+        return results_json   
+    except Exception as e:
+        return str(e)
+
 #------------------------------------------------- RUN -------------------------------------------------------#
 
 if __name__ == "__main__":

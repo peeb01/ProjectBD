@@ -2,6 +2,72 @@
 <html>
 <head>
     <title>Registration Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        button[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+
+        button[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        #userRegistration, #masuerFields {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Register</h1>
@@ -23,7 +89,7 @@
             <label for="lname">Last Name:</label>
             <input type="text" id="lname" name="lname" required>
             <br>
-            <label for="dateOfBirth">Date of Birth (YYYY-MM-DD):</label>
+            <label for="dateOfBirth">Date of Birth (yyyy-mm-dd):</label>
             <input type="text" id="dateOfBirth" name="dateOfBirth" required>
             <br>
             <label for="gender">Gender:</label>
@@ -75,7 +141,11 @@
                     <option value="นวดไทย">นวดไทย</option>
                     <option value="นวดสวีเดน">นวดสวีเดน</option>
                     <option value="นวดเท้า">นวดเท้า</option>
-                    <!-- Add more masuer types here -->
+                    <option value="นวดศีรษะ">นวดศีรษะ</option>
+                    <option value="นวดกล้ามเนื้อคอ">นวดกล้ามเนื้อคอ</option>
+                    <option value="นวดรวม">นวดรวม</option>
+                    <option value="นวดเชียง">นวดเชียง</option>
+                    <option value="นวดน้ำมันร้อน">นวดน้ำมันร้อน</option>
                 </select>
                 <br>
                 <label for="dayoff">Day Off:</label>

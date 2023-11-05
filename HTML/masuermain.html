@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Masuer Main Page</title>
+</head>
+<body>
+    <h1>Welcome to the Masuer Main Page</h1>
+    <button id="schedulingButton">Scheduling</button>
+
+    <script>
+        function checkLoginStatus() {
+            const username = localStorage.getItem("masuerId");
+            if (!username) {
+                window.location.href = "login.html"; // Redirect to the login page if not logged in
+            }
+        }
+        // Event listener for the "Scheduling" button click
+        const schedulingButton = document.getElementById("schedulingButton");
+        schedulingButton.addEventListener("click", function() {
+            window.location.href = "scheduling.html"; // Redirect to scheduling.html
+        });
+    </script>
+</body>
+</html>
