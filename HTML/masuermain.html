@@ -6,6 +6,7 @@
 <body>
     <h1>Welcome to the Masuer Main Page</h1>
     <button id="schedulingButton">Scheduling</button>
+    <button id="rankedButton">Masuer Rank</button>
 
     <script>
         function checkLoginStatus() {
@@ -18,6 +19,10 @@
         const schedulingButton = document.getElementById("schedulingButton");
         schedulingButton.addEventListener("click", function() {
             window.location.href = "scheduling.html"; // Redirect to scheduling.html
+        });
+        const rank = document.getElementById("rankedButton")
+        rank.addEventListener("click", function(){
+            window.location.href = "rank.html"
         });
     </script>
 </body>

@@ -358,31 +358,7 @@ def selectMasuerScheduling(massuer: MassuerScheduiling):
     return JSONResponse(content=sorted_dict_list)
 
 
-#------------------------------------------------- Massuer Income -------------------------------------------
-def getMassuerIncome():
-    try:
-        qeury = """
-                select B.masuerID, sum(B.prices) as TotalPrices
-                from Booking B
-                where B.datTime >= dateadd(month, datediff(month, 0, getdate()), 0)
-                group by B.masuerID
-                """
-        cursor.execute(qeury)
-        results = cursor.fetchall()
-        
-        dict_list = [{'Masuer ID': item[0], 'Total income': item[1]} for item in results]
-        return JSONResponse(content=dict_list)
 
-    except Exception as e:
-        return str(e)
-
-@app.get('/massuerIncome')
-async def massuerIncome():
-    try:
-        result_json = getMassuerIncome()
-        return result_json
-    except Exception as e:
-        return {"error": str(e)}
     
 #------------------------------------------------- Massuer Salary ---------------------------------------------#
 def getMassuerSalary():
@@ -462,7 +438,7 @@ def selectReviews(review: selectReview):
     except Exception as e:
         return str(e)
 
-#------------------------------------------------- Income masuer GET -------------------------------------------------------#
+#------------------------------------------------- History -------------------------------------------------------#
 class viewStory(BaseModel):
     username : str
 
@@ -479,7 +455,35 @@ def getHistory(historys : viewStory):
     dict_list = [{'Name ': item[0],'Masuer Name': str(item[1]), 'Type':item[2], 'Time': str(item[3])} for item in results]
     return JSONResponse(content=dict_list)
 
-#------------------------------------------------- RUN -------------------------------------------------------#
+#------------------------------------------------- Massuer Income -------------------------------------------
+def getMassuerIncome():
+    try:
+        qeury = """
+                select B.masuerID, sum(B.prices) as TotalPrices
+                from Booking B
+                where B.Timemasuer >= dateadd(month, datediff(month, 0, getdate()), 0) and B.Timeofout <= getdate()
+                group by B.masuerID
+                """
+        cursor.execute(qeury)
+        results = cursor.fetchall()
+        
+        dict_list = [{'Masuer ID': item[0], 'Total income': item[1]} for item in results]
+        sorted_dict_list = sorted(dict_list, key=lambda x: x['Total income'], reverse=True)
 
+        return JSONResponse(sorted_dict_list)
+
+    except Exception as e:
+        return str(e)
+
+@app.get('/massuerIncome')
+async def massuerIncome():
+    try:
+        result_json = getMassuerIncome()
+        return result_json
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#------------------------------------------------- RUN -------------------------------------------------------#
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)

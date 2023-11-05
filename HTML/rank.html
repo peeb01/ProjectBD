@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Masseur Income</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #010203;
+            color: #fff;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #010203;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Masseur Income</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Masseur ID</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="incomeTable">
+        </tbody>
+    </table>
+
+    <script>
+        // Function to fetch Masseur Income data
+        function fetchMasseurIncome() {
+            fetch('http://localhost:8000/massuerIncome', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const incomeTable = document.getElementById('incomeTable');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    const masseurIDCell = document.createElement('td');
+                    const totalIncomeCell = document.createElement('td');
+
+                    masseurIDCell.textContent = item['Masuer ID'];
+                    totalIncomeCell.textContent = `THB ${item['Total income'].toFixed(2)}`;
+
+                    row.appendChild(masseurIDCell);
+                    row.appendChild(totalIncomeCell);
+                    incomeTable.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Call the fetchMasseurIncome function to populate the table
+        fetchMasseurIncome();
+    </script>
+</body>
+</html>
