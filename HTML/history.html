@@ -60,6 +60,13 @@
     </table>
 
     <script>
+        function checkLoginStatus() {
+            const username = localStorage.getItem("username");
+            if (!username) {
+                window.location.href = "login.html"; // Redirect to the login page if not logged in
+            }
+        }
+
         const username = localStorage.getItem("username");
         const historyList = document.getElementById("historyList");
 

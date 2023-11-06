@@ -119,6 +119,12 @@
     <div id="resultGrid"></div>
 
     <script>
+        function checkLoginStatus() {
+            const username = localStorage.getItem("username");
+            if (!username) {
+                window.location.href = "login.html"; // Redirect to the login page if not logged in
+            }
+        }
         document.getElementById("fetchData").addEventListener("click", function() {
             const masuerType = document.getElementById("masuerType").value;
             const date = document.getElementById("date").value;
