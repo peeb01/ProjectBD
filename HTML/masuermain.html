@@ -2,11 +2,29 @@
 <html>
 <head>
     <title>Masuer Main Page</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background-color: #007BFF; /* Set the background color of buttons */
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Masuer Main Page</h1>
+    <h1>Welcome Masuer</h1>
     <button id="schedulingButton">Scheduling</button>
     <button id="rankedButton">Masuer Rank</button>
+    <button id="bonusbtn">Salary and Bonus</button>
 
     <script>
         function checkLoginStatus() {
@@ -23,6 +41,10 @@
         const rank = document.getElementById("rankedButton")
         rank.addEventListener("click", function(){
             window.location.href = "rank.html"
+        });
+        const bonusButton = document.getElementById("bonusbtn");
+        bonusButton.addEventListener("click", function(){
+            window.location.href = "bonus.html"
         });
     </script>
 </body>

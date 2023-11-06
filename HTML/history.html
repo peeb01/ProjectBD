@@ -88,11 +88,13 @@
                     masseurTypeCell.textContent = item["Type"];
                     const timeCell = document.createElement("td");
                     timeCell.textContent = item["Time"];
+                    
 
                     row.appendChild(customerNameCell);
                     row.appendChild(masseurNameCell);
                     row.appendChild(masseurTypeCell);
                     row.appendChild(timeCell);
+
 
                     historyList.appendChild(row);
                 });

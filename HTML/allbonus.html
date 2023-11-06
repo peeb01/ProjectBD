@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ALL SALARY AND BONUS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #dataGrid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #dataGrid th, #dataGrid td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #dataGrid th {
+            background-color: #0a172b;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Masuer Bonus</h1>
+    <table id="dataGrid">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Salary</th>
+                <th>Bonus</th>
+            </tr>
+        </thead>
+        <tbody id="dataGridBody">
+            <!-- Data will be added here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("http://localhost:8000/allmasuerbonus", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const dataGridBody = document.getElementById("dataGridBody");
+
+                data.forEach(item => {
+                    const name = item["Name"];
+                    const salary = item["Salary"];
+                    const bonus = item["Bonus"];
+
+                    const row = document.createElement("tr");
+
+                    const nameCell = document.createElement("td");
+                    nameCell.textContent = name;
+
+                    const salaryCell = document.createElement("td");
+                    salaryCell.textContent = salary;
+
+                    const bonusCell = document.createElement("td");
+                    bonusCell.textContent = bonus;
+
+                    row.appendChild(nameCell);
+                    row.appendChild(salaryCell);
+                    row.appendChild(bonusCell);
+
+                    dataGridBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+        });
+    </script>
+</body>
+</html>

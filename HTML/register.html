@@ -18,7 +18,7 @@
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 400px; /* Adjust the width of the form container */
             margin: 0 auto;
             padding: 20px;
             margin-top: 20px;
@@ -51,7 +51,7 @@
         }
 
         button[type="button"] {
-            background-color: #4CAF50;
+            background-color: #2c76e8;
             color: white;
             border: none;
             border-radius: 4px;
@@ -61,7 +61,7 @@
         }
 
         button[type="button"]:hover {
-            background-color: #45a049;
+            background-color: #2c76e8;
         }
 
         #userRegistration, #masuerFields {
@@ -77,66 +77,71 @@
         <br>
         <!-- User Registration Fields -->
         <div id="userRegistration" style="display: none;">
-            <label for="username">Username:</label>
+            <br><br>
+            <label for="username"style="font-size: 12px;">Username:</label>
             <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">Password:</label>
+            <br><br>
+            <label for="password"style="font-size: 12px;">Password:</label>
             <input type="password" id="password" name="password" required>
-            <br>
-            <label for="fname">First Name:</label>
+            <br><br>
+            <label for="fname"style="font-size: 12px;">First Name:</label>
             <input type="text" id="fname" name="fname" required>
-            <br>
-            <label for="lname">Last Name:</label>
+            <br><br>
+            <label for="lname"style="font-size: 12px;">Last Name:</label>
             <input type="text" id="lname" name="lname" required>
-            <br>
-            <label for="dateOfBirth">Date of Birth (yyyy-mm-dd):</label>
+            <br><br>
+            <label for="dateOfBirth"style="font-size: 12px;">Date of Birth (yyyy-mm-dd):</label>
             <input type="text" id="dateOfBirth" name="dateOfBirth" required>
-            <br>
-            <label for="gender">Gender:</label>
+            <br><br>
+            <label for="gender"style="font-size: 12px;">Gender:</label>
             <select id="gender" name="gender">
                 <option value="M">Male</option>
                 <option value="F">Female</option>
             </select>
-            <br>
-            <label for="phoneNum">Phone Number:</label>
+            <br><br>
+            <label for="phoneNum"style="font-size: 12px;">Phone Number:</label>
             <input type="text" id="phoneNum" name="phoneNum" required>
-            <br>
-            <label for="email">Email:</label>
+            <br><br>
+            <label for="email"style="font-size: 12px;">Email:</label>
             <input type="email" id="email" name="email" required>
-            <br>
-            <label for="localPlace">Local Place:</label>
+            <br><br>
+            <label for="localPlace"style="font-size: 12px;">Address</label>
             <input type="text" id="localPlace" name="localPlace" required>
+            <br><br>
         </div>
         <!-- Masuer Registration Fields -->
         <div id="masuerCodeDiv" style="display: none;">
-            <label for="masuerCode">Masuer Code:</label>
+            <label for="masuerCode"style="font-size: 12px;">Masuer Code:</label>
             <input type="text" id="masuerCode" name="masuerCode" required>
+            <br><br><br><br>
             <button type="button" id="masuerCodeCheck">Check Code</button>
+            <br><br>
+
         </div>
         <!-- Masuer Registration Fields (initially hidden) -->
             <div id="masuerFields" style="display: none;">
-                <label for="fname">First Name:</label>
+                <label for="fname"style="font-size: 12px;">First Name:</label>
                 <input type="text" id="masuerFname" name="masuerFname" required>
-                <br>
-                <label for="lname">Last Name:</label>
+                <br><br>
+                <label for="lname"style="font-size: 12px;">Last Name:</label>
                 <input type="text" id="masuerLname" name="masuerLname" required>
-                <br>
-                <label for="dateOfBirth">Date of Birth (YYYY-MM-DD):</label>
+                <br><br>
+                <label for="dateOfBirth"style="font-size: 12px;">Date of Birth ( Ex.1990-05-15 ):</label>
                 <input type="text" id="masuerDateOfBirth" name="masuerDateOfBirth" required>
-                <br>
-                <label for="gender">Gender:</label>
+                <br><br>
+                <label for="gender"style="font-size: 12px;">Gender:</label>
                 <select id="masuerGender" name="masuerGender">
                     <option value="M">Male</option>
                     <option value="F">Female</option>
                 </select>
-                <br>
-                <label for="phoneNum">Phone Number:</label>
+                <br><br>
+                <label for="phoneNum"style="font-size: 12px;">Phone Number:</label>
                 <input type="text" id="masuerPhoneNum" name="masuerPhoneNum" required>
-                <br>
-                <label for="email">Email:</label>
+                <br><br>
+                <label for="email"style="font-size: 12px;">Email:</label>
                 <input type="email" id="masuerEmail" name="masuerEmail" required>
-                <br>
-                <label for="masuerType">Masuer Type:</label>
+                <br><br>
+                <label for="masuerType"style="font-size: 12px;">Masuer Type:</label>
                 <select id="masuerType" name="masuerType">
                     <option value="นวดไทย">นวดไทย</option>
                     <option value="นวดสวีเดน">นวดสวีเดน</option>
@@ -147,8 +152,8 @@
                     <option value="นวดเชียง">นวดเชียง</option>
                     <option value="นวดน้ำมันร้อน">นวดน้ำมันร้อน</option>
                 </select>
-                <br>
-                <label for="dayoff">Day Off:</label>
+                <br><br>
+                <label for="dayoff" style="font-size: 12px;">Day Off:</label>
                 <select id="masuerDayoff" name="masuerDayoff">
                     <option value="Sunday">Sunday</option>
                     <option value="Monday">Monday</option>
@@ -159,7 +164,9 @@
                     <option value="Saturday">Saturday</option>
                 </select>
             </div>
+            <br>
             <button type="button" id="registerButton">Register</button>
+            <br><br>
         </form>
 
         <script>

@@ -483,7 +483,48 @@ async def massuerIncome():
     except Exception as e:
         return {"error": str(e)}
 
+#------------------------------------------------- Bonus -------------------------------------------------------#
+class Bonus(BaseModel):
+    masuerId : int
 
+@app.post('/masuerbonus')
+def bonusCalculator(Bonus : Bonus):
+    masuerId = Bonus.masuerId
+    qeury = """
+            SELECT M.fname, SUM(B.prices) * 0.15 AS BonusPrices
+            FROM Booking B
+            INNER JOIN Masuer M ON B.masuerID = M.masuerId
+            WHERE B.masuerID = ?
+                AND CONVERT(DATE, B.Timeofout) >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) -- 1st day of the current month
+                AND CONVERT(DATE, B.Timeofout) <= CAST(GETDATE() AS DATE) -- Current date
+            GROUP BY M.fname;
+
+            """
+    cursor.execute(qeury, masuerId)
+    results = cursor.fetchall()
+    dict_list = [{'Name ': item[0],'Salary': 15500, 'Bomus':item[1]} for item in results]
+    return JSONResponse(content=dict_list)
+
+@app.get('/allmasuerbonus')
+def getAllMasuerBonus():
+    try:
+        qeury = """
+                SELECT M.fname, SUM(B.prices) * 0.15 AS BonusPrices
+                FROM Booking B
+                INNER JOIN Masuer M ON B.masuerID = M.masuerId
+                WHERE CONVERT(DATE, B.Timeofout) >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) -- 1st day of the current month
+                    AND CONVERT(DATE, B.Timeofout) <= CAST(GETDATE() AS DATE) -- Current date
+                GROUP BY M.fname;
+
+                """
+        cursor.execute(qeury)
+        results = cursor.fetchall()
+            
+        dict_list = [{'Name': item[0], 'Salary': 15500, 'Bonus': item[1]} for item in results]
+        return JSONResponse(dict_list)
+    
+    except Exception as e:
+        return str(e)
 #------------------------------------------------- RUN -------------------------------------------------------#
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)
